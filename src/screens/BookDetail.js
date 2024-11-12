@@ -7,7 +7,9 @@ import {
   Alert,
   TouchableOpacity,
   ScrollView,
+  ActivityIndicator,
 } from "react-native";
+import { LinearGradient } from "expo-linear-gradient";
 import { db } from "../firebaseConfig";
 import {
   collection,
@@ -78,37 +80,47 @@ export default function BookDetail({ route }) {
 
   if (!book) {
     return (
-      <View style={globalStyles.container}>
-        <Text>Loading book details...</Text>
+      <View style={[globalStyles.container, styles.loadingContainer]}>
+        <ActivityIndicator size="large" color="#4CAF50" />
       </View>
     );
   }
 
   return (
     <ScrollView style={styles.container}>
-      <View style={styles.card}>
-        <Image source={{ uri: book.coverPage }} style={styles.coverImage} />
-        <View style={styles.infoContainer}>
-          <Text style={styles.bookName}>{book.name}</Text>
-          <Text style={styles.author}>by {book.author}</Text>
-          <Text style={styles.rating}>⭐ {book.rating}</Text>
+      <LinearGradient
+        colors={["#E0F7FA", "#F1F8E9"]}
+        style={styles.gradientBackground}
+      >
+        <View style={styles.card}>
+          <Image source={{ uri: book.coverPage }} style={styles.coverImage} />
+          <View style={styles.infoContainer}>
+            <Text style={styles.bookName}>{book.name}</Text>
+            <Text style={styles.author}>by {book.author}</Text>
+            <Text style={styles.rating}>⭐ {book.rating}</Text>
+          </View>
+          <Text style={styles.sectionTitle}>Summary</Text>
+          <Text style={styles.summary}>{book.summary}</Text>
+          <Text
+            style={[
+              styles.status,
+              { color: book.isBorrowed ? "#FF5C5C" : "#4CAF50" },
+            ]}
+          >
+            {book.isBorrowed ? "Currently Borrowed" : "Available"}
+          </Text>
+          {!book.isBorrowed && (
+            <TouchableOpacity style={styles.borrowButton} onPress={handleBorrow}>
+              <LinearGradient
+                colors={["#4CAF50", "#388E3C"]}
+                style={styles.buttonGradient}
+              >
+                <Text style={styles.borrowButtonText}>Borrow this Book</Text>
+              </LinearGradient>
+            </TouchableOpacity>
+          )}
         </View>
-        <Text style={styles.sectionTitle}>Summary</Text>
-        <Text style={styles.summary}>{book.summary}</Text>
-        <Text
-          style={[
-            styles.status,
-            { color: book.isBorrowed ? "#FF5C5C" : "#4CAF50" },
-          ]}
-        >
-          {book.isBorrowed ? "Currently Borrowed" : "Available"}
-        </Text>
-        {!book.isBorrowed && (
-          <TouchableOpacity style={styles.borrowButton} onPress={handleBorrow}>
-            <Text style={styles.borrowButtonText}>Borrow this Book</Text>
-          </TouchableOpacity>
-        )}
-      </View>
+      </LinearGradient>
     </ScrollView>
   );
 }
@@ -116,22 +128,28 @@ export default function BookDetail({ route }) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#F2F2F2",
+  },
+  loadingContainer: {
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  gradientBackground: {
+    flex: 1,
   },
   card: {
     backgroundColor: "#FFFFFF",
-    borderRadius: 16,
-    padding: 20,
-    margin: 16,
+    borderRadius: 20,
+    padding: 24,
+    margin: 20,
     shadowColor: "#000",
     shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.1,
-    shadowRadius: 8,
-    elevation: 4,
+    shadowOpacity: 0.15,
+    shadowRadius: 10,
+    elevation: 8,
   },
   coverImage: {
     width: "100%",
-    height: 250,
+    height: 280,
     borderRadius: 12,
     marginBottom: 16,
   },
@@ -140,14 +158,14 @@ const styles = StyleSheet.create({
     marginBottom: 16,
   },
   bookName: {
-    fontSize: 22,
+    fontSize: 24,
     fontWeight: "bold",
     color: "#333",
     textAlign: "center",
   },
   author: {
     fontSize: 16,
-    color: "#777",
+    color: "#555",
     marginTop: 4,
   },
   rating: {
@@ -163,7 +181,7 @@ const styles = StyleSheet.create({
   },
   summary: {
     fontSize: 14,
-    color: "#555",
+    color: "#666",
     lineHeight: 22,
     textAlign: "justify",
   },
@@ -175,9 +193,13 @@ const styles = StyleSheet.create({
     marginBottom: 16,
   },
   borrowButton: {
+    borderRadius: 12,
+    overflow: "hidden",
+    marginHorizontal: 20,
+    elevation: 2,
+  },
+  buttonGradient: {
     paddingVertical: 14,
-    backgroundColor: "#3A7AFE",
-    borderRadius: 10,
     alignItems: "center",
   },
   borrowButtonText: {

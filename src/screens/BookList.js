@@ -7,7 +7,7 @@ import {
   ImageBackground,
   StyleSheet,
 } from "react-native";
-import { LinearGradient } from "expo-linear-gradient"; // Make sure to install expo-linear-gradient
+import { LinearGradient } from "expo-linear-gradient";
 import { db } from "../firebaseConfig";
 import { collection, onSnapshot } from "firebase/firestore";
 import { Svg, Circle, Rect } from "react-native-svg"; // For background vectors
