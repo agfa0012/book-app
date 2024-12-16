@@ -11,15 +11,6 @@ const firebaseConfig = {
   measurementId: "G-2MR54CGXPG",
 };
 
-// const firebaseConfig = {
-//   apiKey: "AIzaSyCoA6oakVS6nnBF_Dzfmd1msTtK553BzoY",
-//   authDomain: "book-app-e3256.firebaseapp.com",
-//   projectId: "book-app-e3256",
-//   storageBucket: "book-app-e3256.firebasestorage.app",
-//   messagingSenderId: "967629049497",
-//   appId: "1:967629049497:web:571eecb08e6da1eca93208",
-//   measurementId: "G-9PYW3770MF"
-// };
 
 // Initialize Firebase if not already initialized
 const app = initializeApp(firebaseConfig);
